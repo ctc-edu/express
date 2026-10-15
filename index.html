@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Material Express · CTC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora&family=Mulish:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dark:#001F19; --mint:#DAF2F0; --teal:#6BE3D7; --white:#fff;
+    --acc:#1D5BBC; --acc-soft:#E2F2FF; --acc-mid:#BFE1FC;
+    --text:#262626; --text2:#3F3F3F; --muted:#888;
+    --line:#E3ECEB; --bg:#F7FBFA;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:Mulish,Calibri,Arial,sans-serif;font-size:15px;line-height:1.5}
+  a{color:inherit}
+  header{background:var(--dark);color:var(--white);padding:40px 20px 32px}
+  .wrap{max-width:1040px;margin:0 auto}
+  .brand{font-family:Poppins,Arial,sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+  h1{font-family:Lora,Georgia,serif;font-weight:400;font-size:clamp(1.8rem,4vw,2.6rem);margin:.3em 0 .2em}
+  h1 em{font-style:normal;color:var(--teal)}
+  .sub{color:#cfe7e3;max-width:640px;margin:0}
+  .note{margin-top:20px;display:flex;gap:10px;align-items:flex-start;background:rgba(107,227,215,.12);border:1px solid rgba(107,227,215,.35);border-radius:12px;padding:12px 14px;font-size:.9rem;color:#e6f5f3;max-width:720px}
+  .tabs{position:sticky;top:0;z-index:5;background:var(--white);border-bottom:1px solid var(--line)}
+  .tabs .wrap{display:flex;gap:8px;padding:12px 20px;flex-wrap:wrap;align-items:center}
+  .tab{font-family:Poppins,Arial,sans-serif;font-weight:600;font-size:.9rem;border:1px solid var(--line);background:var(--white);color:var(--text2);padding:8px 16px;border-radius:999px;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--dark);border-color:var(--dark);color:var(--white)}
+  .search{margin-left:auto;flex:1 1 200px;max-width:280px;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font:inherit;font-size:.9rem}
+  main{padding:28px 20px 60px}
+  .section{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:18px}
+  .section h2{font-family:Poppins,Arial,sans-serif;font-weight:700;font-size:1.05rem;margin:0 0 4px;color:var(--dark)}
+  .section .meta{color:var(--muted);font-size:.8rem;margin-bottom:14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+  .item{display:flex;flex-direction:column;gap:6px;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--white);transition:border-color .15s,box-shadow .15s}
+  .item:hover,.item:focus-visible{border-color:var(--acc);box-shadow:0 2px 10px rgba(29,91,188,.12);outline:none}
+  .item .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .pill{font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
+  .p-base{background:var(--mint);color:var(--dark)}
+  .p-ref{background:var(--acc-soft);color:var(--acc)}
+  .p-crack{background:var(--dark);color:var(--teal)}
+  .p-doc{background:#F1F1F1;color:var(--text2)}
+  .item .name{font-weight:600;color:var(--text);font-size:.95rem}
+  .item .file{font-size:.75rem;color:var(--muted);word-break:break-word}
+  .size{font-size:.75rem;color:var(--muted);white-space:nowrap}
+  .empty{color:var(--muted);text-align:center;padding:30px}
+  footer{color:var(--muted);font-size:.78rem;text-align:center;padding:0 20px 40px}
+  @media (max-width:560px){.search{max-width:none;margin-left:0}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">Crack the Code</div>
+    <h1>Material <em>Express</em></h1>
+    <p class="sub">Índice para revisión docente. Elige el grado y abre cada recurso: Bienvenida, Retos 1 al 5 (versiones Base, Refuerzo y Crack) y Cierre.</p>
+    <div class="note">
+      <span aria-hidden="true">⚡</span>
+      <span>Esta página es liviana: los recursos <strong>solo se cargan cuando los abres</strong> (se abren en una pestaña nueva). Cada uno pesa alrededor de 0,5 MB; con conexión lenta puede tardar unos segundos. Los .docx se descargan.</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Grados">
+  <div class="wrap" role="tablist" id="tabs">
+    <input class="search" id="q" type="search" placeholder="Buscar (ej. reto 3, crack)…" aria-label="Buscar recurso">
+  </div>
+</nav>
+
+<main class="wrap" id="content"></main>
+<footer>Crack the Code · Innovación Educativa</footer>
+
+<script>
+// Las rutas reproducen la estructura de la carpeta "express" de Drive.
+// Si renombras o mueves un archivo, actualiza su "f" aquí.
+const DATA = {
+  "Grado 9": {
+    inicio: [
+      {t:"Bienvenida · Parte 1", v:"base", f:"Bienvenida parte 1_grado 9.html", s:570030},
+      {t:"Bienvenida · Parte 2", v:"base", f:"Bienvenida parte 2_grado 9.html", s:562768},
+      {t:"Bienvenida · Parte 1", v:"crack", f:"Bienvenida_P1_Grado_9_Crack.html", s:498823},
+      {t:"Bienvenida · Parte 2", v:"crack", f:"Bienvenida_P2_Grado_9_Crack.html", s:533508}
+    ],
+    retos: {
+      "Reto 1":[{v:"base",f:"Reto 1_base_grado 9.html",s:546974},{v:"ref",f:"Reto 1_refuerzo_grado9.html",s:503414},{v:"crack",f:"reto1-crack.html",s:507855}],
+      "Reto 2":[{v:"base",f:"Reto 2_ base_grado 9.html",s:543909},{v:"ref",f:"reto2-refuerzo.html",s:533731},{v:"crack",f:"reto2-crack.html",s:505512}],
+      "Reto 3":[{v:"base",f:"reto 3_base_grado 9.html",s:544144},{v:"ref",f:"reto3-refuerzo.html",s:530471},{v:"crack",f:"reto3-crack.html",s:504884}],
+      "Reto 4":[{v:"base",f:"Reto 4_base_grado 9.html",s:537875},{v:"ref",f:"reto4-refuerzo.html",s:515405},{v:"crack",f:"reto4-crack.html",s:501978}],
+      "Reto 5":[{v:"base",f:"Reto 5_base_grado 9.html",s:539712},{v:"ref",f:"reto5-refuerzo.html",s:523839},{v:"crack",f:"reto5-crack.html",s:503302}]
+    },
+    cierre: [{t:"Cierre", v:"base", f:"Cierre_grado 9.html", s:518999}],
+    docs: [
+      {t:"Guía express (Word)", v:"doc", f:"Grado 9 - express.docx", s:641154},
+      {t:"Orden de Campus (Word)", v:"doc", f:"Orden de campus grado 9.docx", s:314021}
+    ]
+  },
+  "Grado 10": {
+    inicio: [
+      {t:"Bienvenida · Parte 1", v:"base", f:"Bienvenida Parte 1_grado 10.html", s:570091},
+      {t:"Bienvenida · Parte 2", v:"base", f:"Bienvenida Parte 2_grado 10.html", s:562765},
+      {t:"Bienvenida · Parte 1", v:"crack", f:"Bienvenida_P1_Grado_10_Crack.html", s:497667},
+      {t:"Bienvenida · Parte 2", v:"crack", f:"Bienvenida_P2_Grado_10_Crack.html", s:532208}
+    ],
+    retos: {
+      "Reto 1":[{v:"base",f:"Reto 1_Base _ grado 10.html",s:549558},{v:"ref",f:"Reto 1_refuerzo_grado 10.html",s:503711},{v:"crack",f:"03_Reto1_Grado_10_Crack.html",s:508245}],
+      "Reto 2":[{v:"base",f:"Reto 2_base_grado 10.html",s:542242},{v:"ref",f:"04_Reto2_Grado_10_Refuerzo.html",s:526327},{v:"crack",f:"04_Reto2_Grado_10_Crack.html",s:506739}],
+      "Reto 3":[{v:"base",f:"Reto 3_base_grado 10.html",s:542838},{v:"ref",f:"05_Reto3_Grado_10_Refuerzo.html",s:527831},{v:"crack",f:"05_Reto3_Grado_10_Crack_Codigo.html",s:511741,x:"opción Código"},{v:"crack",f:"05_Reto3_Grado_10_Crack_Fotos.html",s:506777,x:"opción Fotos"}],
+      "Reto 4":[{v:"base",f:"Reto 4_base_grado 10.html",s:532834},{v:"ref",f:"06_Reto4_Grado_10_Refuerzo.html",s:515734},{v:"crack",f:"06_Reto4_Grado_10_Crack.html",s:504433}],
+      "Reto 5":[{v:"base",f:"Reto 5_base_grado 10.html",s:539425},{v:"ref",f:"07_Reto5_Grado_10_Refuerzo.html",s:523949},{v:"crack",f:"07_Reto5_Grado_10_Crack.html",s:503322}]
+    },
+    cierre: [{t:"Cierre", v:"base", f:"Cierre grado 10.html", s:519016}],
+    docs: [
+      {t:"Guía express (Word)", v:"doc", f:"Grado 10 express.docx", s:1407742},
+      {t:"Orden de Campus (Word)", v:"doc", f:"ORDEN DE CAMPUS grado 10.docx", s:323083}
+    ]
+  },
+  "Grado 11": {
+    inicio: [
+      {t:"Bienvenida · Parte 1", v:"base", f:"Bienvenida parte 1_grado 11.html", s:570145},
+      {t:"Bienvenida · Parte 2", v:"base", f:"Bienvenida parte 2_grado 11.html", s:563104},
+      {t:"Bienvenida · Parte 1", v:"crack", f:"Bienvenida_P1_Grado_11_Crack.html", s:497055},
+      {t:"Bienvenida · Parte 2", v:"crack", f:"Bienvenida_P2_Grado_11_Crack.html", s:532281}
+    ],
+    retos: {
+      "Reto 1":[{v:"base",f:"Reto 1_base_grado 11.html",s:525126},{v:"ref",f:"Reto 1_Refuerzo_grado 11.html",s:504119},{v:"crack",f:"03_Reto1_Grado_11_Crack.html",s:506889}],
+      "Reto 2":[{v:"base",f:"Reto 2_base_grado 11.html",s:543287},{v:"ref",f:"04_Reto2_Grado_11_Refuerzo.html",s:537377},{v:"crack",f:"04_Reto2_Grado_11_Crack.html",s:504560}],
+      "Reto 3":[{v:"base",f:"Reto 3_base_grado 11.html",s:538366},{v:"ref",f:"05_Reto3_Grado_11_Refuerzo.html",s:523520},{v:"crack",f:"05_Reto3_Grado_11_Crack.html",s:508067}],
+      "Reto 4":[{v:"base",f:"Reto 4_base_grado 11.html",s:528403},{v:"ref",f:"06_Reto4_Grado_11_Refuerzo.html",s:514966},{v:"crack",f:"06_Reto4_Grado_11_Crack.html",s:498630}],
+      "Reto 5":[{v:"base",f:"Reto 5_base_grado 11.html",s:558924},{v:"ref",f:"07_Reto5_Grado_11_Refuerzo.html",s:532556},{v:"crack",f:"07_Reto5_Grado_11_Crack.html",s:503064}]
+    },
+    cierre: [{t:"Cierre", v:"base", f:"Cierre_grado 11.html", s:518971}],
+    docs: [
+      {t:"Base de Datos Equipo", v:"base", f:"Base de Datos Equipo.html", s:1005767},
+      {t:"Guía express (Word)", v:"doc", f:"Grado 11 - express.docx", s:990459},
+      {t:"Orden de Campus (Word)", v:"doc", f:"Orden de Campus grado 11.docx", s:307787}
+    ]
+  }
+};
+
+const LABEL = {base:"Base", ref:"Refuerzo", crack:"Crack", doc:"Descarga"};
+const CLS = {base:"p-base", ref:"p-ref", crack:"p-crack", doc:"p-doc"};
+const fmt = b => b >= 1e6 ? (b/1e6).toFixed(1).replace(".",",")+" MB" : Math.round(b/1e3)+" KB";
+const href = (...parts) => parts.map(encodeURIComponent).join("/");
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function card(it, grado, folder){
+  const path = folder ? href(grado, folder, it.f) : href(grado, it.f);
+  const isDoc = it.v === "doc";
+  const title = it.t || (LABEL[it.v] + (it.x ? " · " + it.x : ""));
+  return `<a class="item" href="${path}" ${isDoc ? "download" : 'target="_blank" rel="noopener"'}
+    data-search="${esc((grado+" "+(folder||"")+" "+title+" "+LABEL[it.v]+" "+it.f).toLowerCase())}">
+    <div class="row"><span class="pill ${CLS[it.v]}">${LABEL[it.v]}</span><span class="size">${fmt(it.s)}</span></div>
+    <span class="name">${esc(title)}</span>
+    <span class="file">${esc(it.f)}</span>
+  </a>`;
+}
+
+function section(title, items, grado, folder){
+  const total = items.reduce((a,i)=>a+i.s,0);
+  return `<section class="section"><h2>${esc(title)}</h2>
+    <div class="meta">${items.length} recurso${items.length>1?"s":""} · ${fmt(total)}</div>
+    <div class="grid">${items.map(i=>card(i, grado, folder)).join("")}</div></section>`;
+}
+
+function render(grado){
+  const g = DATA[grado];
+  let html = section("Bienvenida", g.inicio, grado);
+  for (const [reto, items] of Object.entries(g.retos)) html += section(reto, items, grado, reto);
+  html += section("Cierre", g.cierre, grado);
+  html += section("Documentos de apoyo", g.docs, grado);
+  html += `<p class="empty" id="none" hidden>No hay recursos que coincidan con la búsqueda.</p>`;
+  document.getElementById("content").innerHTML = html;
+  filter();
+}
+
+function filter(){
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  let any = false;
+  document.querySelectorAll(".section").forEach(sec=>{
+    let shown = 0;
+    sec.querySelectorAll(".item").forEach(a=>{
+      const ok = !q || q.split(/\s+/).every(w => a.dataset.search.includes(w));
+      a.hidden = !ok; if (ok) shown++;
+    });
+    sec.hidden = shown === 0; if (shown) any = true;
+  });
+  const none = document.getElementById("none"); if (none) none.hidden = any;
+}
+
+const tabs = document.getElementById("tabs");
+const search = document.getElementById("q");
+Object.keys(DATA).forEach((g,i)=>{
+  const b = document.createElement("button");
+  b.className = "tab"; b.role = "tab"; b.textContent = g;
+  b.setAttribute("aria-selected", i===0);
+  b.onclick = ()=>{
+    tabs.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected", t===b));
+    render(g);
+    try{ history.replaceState(null,"","#"+encodeURIComponent(g)); }catch(e){}
+  };
+  tabs.insertBefore(b, search);
+});
+search.addEventListener("input", filter);
+
+const start = decodeURIComponent(location.hash.slice(1));
+const first = DATA[start] ? start : Object.keys(DATA)[0];
+tabs.querySelectorAll(".tab").forEach(t=>{ if (t.textContent === first) t.click(); });
+</script>
+</body>
+</html>
